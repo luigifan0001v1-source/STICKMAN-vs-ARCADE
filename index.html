@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arcade vs Stickman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #ffd000;
+      color: #000000;
+      font-family: 'VT323', monospace;
+      overflow-x: hidden;
+    }
+    .retro-font {
+      font-family: 'Press Start 2P', cursive;
+    }
+    .retro-yellow-bg {
+      background-color: #ffd000;
+      background-image: radial-gradient(#eab308 1.5px, transparent 1.5px);
+      background-size: 20px 20px;
+    }
+    .crt-effect::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 10;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+    .scanline {
+      width: 100%;
+      height: 100px;
+      z-index: 11;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.05) 10%, rgba(0, 0, 0, 0.05) 100%);
+      opacity: 0.1;
+      position: absolute;
+      bottom: 100%;
+      animation: scanline 6s linear infinite;
+    }
+    @keyframes scanline {
+      0% { bottom: 100%; }
+      80% { bottom: 100%; }
+      100% { bottom: 0%; }
+    }
+    .glow-green {
+      text-shadow: 0 0 10px #00ff00;
+    }
+    .glow-black {
+      text-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+    
+    /* Improved Marquee Chasing Lights */
+    .chase-border {
+      background: 
+        radial-gradient(circle, #ffffff 30%, transparent 40%) 0 0,
+        radial-gradient(circle, #000000 30%, transparent 40%) 12px 0;
+      background-size: 24px 100%;
+      background-repeat: repeat-x;
+      height: 12px;
+      width: 100%;
+      animation: marquee-chase 0.4s linear infinite;
+    }
+
+    .chase-border-vertical {
+      background: 
+        radial-gradient(circle, #ffffff 30%, transparent 40%) 0 0,
+        radial-gradient(circle, #000000 30%, transparent 40%) 0 12px;
+      background-size: 100% 24px;
+      background-repeat: repeat-y;
+      width: 12px;
+      height: 100%;
+      animation: marquee-chase-v 0.4s linear infinite;
+    }
+    
+    @keyframes marquee-chase {
+      from { background-position: 0 0, 12px 0; }
+      to { background-position: 24px 0, 36px 0; }
+    }
+
+    @keyframes marquee-chase-v {
+      from { background-position: 0 0, 0 12px; }
+      to { background-position: 0 24px, 0 36px; }
+    }
+
+    .neon-flicker {
+      text-shadow: 
+        0 0 2px #fff,
+        0 0 5px #fff,
+        0 0 10px #000;
+      animation: neon-pulse 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes neon-pulse {
+      from { opacity: 0.9; }
+      to { opacity: 1; }
+    }
+
+    .stickman {
+      transition: all 0.3s ease-in-out;
+    }
+    
+    /* Halftone Effect Overlay */
+    .halftone-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, #000 1px, transparent 1px);
+      background-size: 4px 4px;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Motion Blur Classes */
+    .motion-blur-sm { filter: url(#blur-horizontal-sm); }
+    .motion-blur-md { filter: url(#blur-horizontal-md); }
+    .motion-blur-lg { filter: url(#blur-horizontal-lg); }
+    .motion-blur-v { filter: url(#blur-vertical); }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
+    "recharts": "https://esm.sh/recharts@^3.7.0"
+  }
+}
+</script>
+</head>
+<body class="retro-yellow-bg">
+  <div class="halftone-overlay"></div>
+  
+  <!-- Motion Blur Filters -->
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="blur-horizontal-sm">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2,0" />
+    </filter>
+    <filter id="blur-horizontal-md">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5,0" />
+    </filter>
+    <filter id="blur-horizontal-lg">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10,0" />
+    </filter>
+    <filter id="blur-vertical">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0,8" />
+    </filter>
+    <filter id="dynamic-blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0,0" id="blur-filter-dev" />
+    </filter>
+  </svg>
+
+  <div id="root"></div>
+</body>
+</html>
